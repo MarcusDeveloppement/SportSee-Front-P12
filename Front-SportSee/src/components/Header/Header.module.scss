@@ -1,0 +1,19 @@
+.header {
+  background-color: var(--background);
+  height: 5.5rem;
+  display: flex;
+
+  a {
+    color: var(--text-bg);
+  }
+  img {
+    width: 178px;
+  }
+  nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    width: -webkit-fill-available;
+    font-size: 24px;
+  }
+}
