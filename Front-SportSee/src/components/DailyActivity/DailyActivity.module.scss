@@ -1,0 +1,15 @@
+.tooltip {
+  background-color: var(--primary);
+  height: 73px;
+  width: 49px;
+  gap: 15px;
+  color: var(--text-bg);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-size: 10px;
+}
+.bar {
+  font-size: 1rem;
+}

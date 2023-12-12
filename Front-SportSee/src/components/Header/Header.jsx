@@ -5,7 +5,7 @@ export default function Header() {
     <header className={styles.header}>
       <nav>
         <img src={logo} alt="logo" />
-        <a href="#">Accueil</a>
+        <a href="/">Accueil</a>
         <a href="#">Profil</a>
         <a href="#">Réglages</a>
         <a href="#">Communauté</a>
