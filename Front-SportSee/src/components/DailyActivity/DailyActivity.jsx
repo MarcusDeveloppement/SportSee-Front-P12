@@ -28,48 +28,79 @@ export default function DailyActivity() {
 
   if (data.length === 0) return null;
 
-  const sessionsCountData = data.map((session, index) => ({
-    sessions: index + 1,
+  const sessionsCountData = data.map((session) => ({
+    day: session.day,
     calories: session.calories,
     kilogram: session.kilogram,
-    day: session.day, // Conserver cette clé pour les données BarChart
+    day: session.day,
   }));
 
-  return (
-    <ResponsiveContainer height={200}>
-      <BarChart data={sessionsCountData} barGap={8} barCategoryGap={1}>
-        <CartesianGrid vertical={false} strokeDasharray="1 1" />
-        <XAxis dataKey="sessions" />
-        <YAxis
-          yAxisId="right"
-          orientation="right"
-          axisLine={false}
-          tick={{ fontSize: 14 }}
-          tickCount={3}
-          dx={15}
-        />
-        <YAxis yAxisId="left" hide />
-        <Tooltip content={<CustomTooltip />} />
-        <Bar
-          yAxisId="right"
-          dataKey="kilogram"
-          fill="#282d30"
-          barSize={8}
-          stackId="stack"
-          radius={[5, 5, 0, 0]}
-        />
+  const formatDate = (dateStr) => {
+    const date = new Date(dateStr);
+    return date.getDate();
+  };
 
-        <Bar
-          yAxisId="left"
-          dataKey="calories"
-          fill="#ff0101"
-          barSize={8}
-          style={{ borderRadius: "5px" }}
-          stackId="stack"
-          radius={[5, 5, 0, 0]}
-        />
-      </BarChart>
-    </ResponsiveContainer>
+  return (
+    <div className={styles.container}>
+      <div className={styles.titleContainer}>
+        <h2>Activité quotidienne</h2>
+        <div className={styles.dotContent}>
+          <p>
+            <span>
+              <i className={`fa-solid fa-circle ${styles.blackdot}`}></i>
+            </span>
+            Poids (kg)
+          </p>
+          <p>
+            <span>
+              <i className={`fa-solid fa-circle ${styles.reddot}`}></i>
+            </span>
+            Calories brulées (kCal)
+          </p>
+        </div>
+      </div>
+      <ResponsiveContainer height={200}>
+        <BarChart data={sessionsCountData} barGap={8} barCategoryGap={1}>
+          <CartesianGrid vertical={false} strokeDasharray="1 1" />
+          <XAxis
+            dataKey="day"
+            tickFormatter={formatDate}
+            tickLine={false}
+            axisLine={{ stroke: "#9b9eac" }}
+            tick={{ fill: "#9b9eac" }}
+          />
+          <YAxis
+            yAxisId="right"
+            orientation="right"
+            axisLine={false}
+            tick={{ fontSize: 14, fill: "#9b9eac" }}
+            tickCount={3}
+            dx={15}
+            tickLine={false}
+          />
+          <YAxis yAxisId="left" hide />
+          <Tooltip content={<CustomTooltip />} />
+          <Bar
+            yAxisId="right"
+            dataKey="kilogram"
+            fill="#282d30"
+            barSize={8}
+            stackId="stack"
+            radius={[5, 5, 0, 0]}
+          />
+
+          <Bar
+            yAxisId="left"
+            dataKey="calories"
+            fill="#ff0101"
+            barSize={8}
+            style={{ borderRadius: "5px" }}
+            stackId="stack"
+            radius={[5, 5, 0, 0]}
+          />
+        </BarChart>
+      </ResponsiveContainer>
+    </div>
   );
 }
 

@@ -10,6 +10,35 @@
   align-items: center;
   font-size: 10px;
 }
-.bar {
-  font-size: 1rem;
+
+.container {
+  background: #fbfbfb;
+  padding: 2rem;
+}
+
+.titleContainer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  margin-bottom: 3rem;
+}
+
+.dotContent {
+  display: flex;
+  color: #74798c;
+  span {
+    font-size: 8px;
+    padding: 1rem;
+  }
+  p {
+    display: flex;
+    align-items: center;
+  }
+}
+.reddot {
+  color: var(--primary);
+}
+.blackdot {
+  color: var(--background);
 }
