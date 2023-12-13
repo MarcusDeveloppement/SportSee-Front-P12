@@ -5,6 +5,7 @@ import Profile from "../../components/Profile/Profile.jsx";
 import { USER_MAIN_DATA } from "../../Data/DataMocked.js";
 import styles from "./Dashboard.module.scss";
 import DailyActivity from "../../components/DailyActivity/DailyActivity.jsx";
+import SessionDuration from "../../components/SessionDuration/SessionDuration.jsx";
 
 export default function Dashboard() {
   const { id } = useParams();
@@ -19,6 +20,7 @@ export default function Dashboard() {
         <div className={styles.graphique}>
           <Profile id={selectedData.id} />
           <DailyActivity />
+          <SessionDuration />
         </div>
       </div>
     </>
