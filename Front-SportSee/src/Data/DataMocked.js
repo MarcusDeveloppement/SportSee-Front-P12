@@ -183,7 +183,7 @@ export const USER_AVERAGE_SESSIONS = [
   },
 ];
 
-const USER_PERFORMANCE = [
+export const USER_PERFORMANCE = [
   {
     userId: 12,
     kind: {
