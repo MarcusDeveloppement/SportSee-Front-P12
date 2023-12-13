@@ -11,6 +11,15 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
+const frenchTranslation = {
+  1: "Cardio",
+  2: "Énergie",
+  3: "Endurance",
+  4: "Force",
+  5: "Vitesse",
+  6: "Intensité",
+};
+
 export default function Intensity() {
   const [data, setData] = useState([]);
   const { id } = useParams();
@@ -22,7 +31,7 @@ export default function Intensity() {
 
     if (userPerformance) {
       const formattedData = userPerformance.data.map((entry, index) => ({
-        subject: userPerformance.kind[index + 1],
+        subject: frenchTranslation[index + 1],
         A: entry.value,
       }));
       setData(formattedData);
@@ -39,7 +48,7 @@ export default function Intensity() {
         <PolarGrid />
         <PolarAngleAxis
           dataKey="subject"
-          tick={{ fill: "white", fontSize: 15, margin: 150 }}
+          tick={{ fill: "white", fontSize: 12, margin: 150 }}
           dy={4}
         />
         <PolarRadiusAxis style={{ display: "none" }} />
