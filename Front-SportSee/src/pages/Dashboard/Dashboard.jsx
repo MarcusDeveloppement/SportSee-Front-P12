@@ -7,6 +7,7 @@ import styles from "./Dashboard.module.scss";
 import DailyActivity from "../../components/DailyActivity/DailyActivity.jsx";
 import SessionDuration from "../../components/SessionDuration/SessionDuration.jsx";
 import Intensity from "../../components/Intensity/Intensity.jsx";
+import Score from "../../components/Score/Score.jsx";
 
 export default function Dashboard() {
   const { id } = useParams();
@@ -24,6 +25,7 @@ export default function Dashboard() {
           <div className={styles.graph}>
             <SessionDuration />
             <Intensity />
+            <Score />
           </div>
         </div>
       </div>

@@ -26,3 +26,14 @@ a {
 .recharts-polar-angle-axis-tick-value {
   margin: 1rem;
 }
+
+.recharts-pie-label-line {
+  stroke: none;
+}
+.recharts-sector {
+  border-radius: 10px;
+}
+
+.recharts-layer {
+  left: 20px;
+}
