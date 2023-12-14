@@ -8,6 +8,7 @@ import DailyActivity from "../../components/DailyActivity/DailyActivity.jsx";
 import SessionDuration from "../../components/SessionDuration/SessionDuration.jsx";
 import Intensity from "../../components/Intensity/Intensity.jsx";
 import Score from "../../components/Score/Score.jsx";
+import CardInfo from "../../components/CardInfo/CardInfo.jsx";
 
 export default function Dashboard() {
   const { id } = useParams();
@@ -19,13 +20,20 @@ export default function Dashboard() {
       <Header />
       <div className={styles.container}>
         <LateralBar />
-        <div className={styles.graphique}>
-          <Profile id={selectedData.id} />
-          <DailyActivity />
-          <div className={styles.graph}>
-            <SessionDuration />
-            <Intensity />
-            <Score />
+        <div className={styles.globalContent}>
+          <div className={styles.graphique}>
+            <div className={styles.displayAdapt}>
+              <div className={styles.profil}>
+                <Profile id={selectedData.id} />
+              </div>
+              <DailyActivity />
+              <div className={styles.graph}>
+                <SessionDuration />
+                <Intensity />
+                <Score />
+              </div>
+            </div>
+            <CardInfo />
           </div>
         </div>
       </div>

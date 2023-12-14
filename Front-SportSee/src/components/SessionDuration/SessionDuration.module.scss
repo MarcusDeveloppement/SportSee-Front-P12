@@ -1,3 +1,4 @@
+@use "../../assets/styles/mixins" as mixin;
 .overlay {
   position: fixed;
   top: 0;
@@ -14,6 +15,10 @@
   display: inline-block;
   border-radius: 5px;
   font-weight: 100;
+  @include mixin.sm-display {
+    width: 14rem;
+    padding-left: 0.8rem;
+  }
 }
 
 .title {

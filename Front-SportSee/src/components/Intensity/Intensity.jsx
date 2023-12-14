@@ -43,12 +43,13 @@ export default function Intensity() {
   }
 
   return (
-    <ResponsiveContainer width="43%" height={281} className={styles.container}>
+    <ResponsiveContainer width="35%" height={281} className={styles.container}>
       <RadarChart cx="50%" cy="50%" outerRadius="80%" data={data}>
         <PolarGrid />
         <PolarAngleAxis
+          className={styles.text}
           dataKey="subject"
-          tick={{ fill: "white", fontSize: 12, margin: 150 }}
+          tick={{ fill: "white", fontSize: 12, margin: 100 }}
           dy={4}
         />
         <PolarRadiusAxis style={{ display: "none" }} />

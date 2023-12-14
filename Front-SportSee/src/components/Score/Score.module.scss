@@ -1,4 +1,10 @@
+@use "../../assets/styles/mixins" as mixin;
 .container {
   background-color: #fbfbfb;
   border-radius: 5px;
+  @include mixin.sm-display {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 }

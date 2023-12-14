@@ -1,3 +1,4 @@
+@use "../../assets/styles/mixins" as mixin;
 .tooltip {
   background-color: var(--primary);
   height: 73px;
@@ -14,7 +15,11 @@
 .container {
   background: #fbfbfb;
   padding: 2rem;
-  width: 835px;
+  width: 950px;
+  @include mixin.sm-display {
+    width: 691px;
+    height: 335px;
+  }
 }
 
 .titleContainer {

@@ -1,0 +1,39 @@
+@use "../../assets/styles/mixins" as mixin;
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 2.5rem;
+  margin-top: 7.3rem;
+  @include mixin.sm-display {
+    margin-top: 1.8rem;
+    margin-right: 1rem;
+  }
+}
+.macroContent {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--card-color);
+  padding: 2rem;
+  border-radius: 5px;
+  @include mixin.sm-display {
+    padding: 0.5rem;
+    height: 15%;
+  }
+}
+.describe {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 1rem;
+  p {
+    font-size: 20px;
+    font-weight: 700;
+  }
+  span {
+    font-size: 14px;
+    font-weight: 500;
+    color: #74798c;
+  }
+}
