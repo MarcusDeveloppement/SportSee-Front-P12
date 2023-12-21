@@ -1,18 +1,18 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 import styles from "./Accueil.module.scss";
-import { USER_MAIN_DATA } from "../../Data/DataMocked";
 
 export default function Accueil() {
   return (
     <div>
       <h1 className={styles.title}>Choisissez un profil</h1>
       <div className={styles.linkContainer}>
-        {USER_MAIN_DATA.map((user) => (
-          <NavLink to={`/user/${user.id}`} key={user.id}>
-            <button>{user.userInfos.firstName}</button>
+          <NavLink to={`/user/12`} key={12}>
+            <button>Karl</button>
           </NavLink>
-        ))}
+          <NavLink to={`/user/18`} key={18}>
+            <button>Cecilia</button>
+          </NavLink>
       </div>
     </div>
   );

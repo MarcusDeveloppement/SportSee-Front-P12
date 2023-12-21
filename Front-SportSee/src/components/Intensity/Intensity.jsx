@@ -1,5 +1,5 @@
 import styles from "./Intensity.module.scss";
-import { USER_PERFORMANCE } from "../../Data/DataMocked.js";
+import ApiCall from "../../Data/ApiCall";
 import { useParams } from "react-router";
 import { useState, useEffect } from "react";
 import {
@@ -23,25 +23,32 @@ const frenchTranslation = {
 export default function Intensity() {
   const [data, setData] = useState([]);
   const { id } = useParams();
+  const api = new ApiCall(); 
 
   useEffect(() => {
-    const userPerformance = USER_PERFORMANCE.find(
-      (user) => user.userId === parseInt(id)
-    );
+    const fetchData = async () => {
+      try {
+        const userPerformance = await api.getUserPerformance(id); 
+        if (userPerformance) {
+          const formattedData = userPerformance.data.map((entry, index) => ({
+            subject: frenchTranslation[index + 1], 
+            A: entry.value,
+          }));
+          setData(formattedData);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
 
-    if (userPerformance) {
-      const formattedData = userPerformance.data.map((entry, index) => ({
-        subject: frenchTranslation[index + 1],
-        A: entry.value,
-      }));
-      setData(formattedData);
+    if (id) {
+      fetchData(); 
     }
-  }, [id]);
+  }, [id, api]);
 
   if (data.length === 0) {
     return null;
   }
-
   return (
     <ResponsiveContainer width="35%" height={281} className={styles.container}>
       <RadarChart cx="50%" cy="50%" outerRadius="80%" data={data}>

@@ -1,14 +1,36 @@
-const apiUrl = "http://localhost:3000/user/";
+export default class ApiCall {
 
-export const fetchUserDataAPI = () => {
-  return fetch(apiUrl)
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error("Erreur lors de la récupération des données");
-      }
-      return response.json();
-    })
-    .catch((error) => {
-      console.error("Erreur lors de la récupération des données :", error);
-    });
-};
+  async getUserData(userId) {
+    const userData = await fetch(
+      'http://localhost:3000/user/' + userId + '/'
+    ).then((r) => r.json())
+
+    if (typeof userData === 'string') {
+      return
+    }
+    return userData.data
+  }
+
+  async getUserActivity(userId) {
+    const userActivity = await fetch(
+      'http://localhost:3000/user/' + userId + '/activity'
+    ).then((r) => r.json())
+    return userActivity.data
+  }
+
+
+  async getUserAverageSessions(userId) {
+    const userAverage = await fetch(
+      'http://localhost:3000/user/' + userId + '/average-sessions'
+    ).then((r) => r.json())
+    return userAverage.data
+  }
+
+
+  async getUserPerformance(userId) {
+    const userPerformance = await fetch(
+      'http://localhost:3000/user/' + userId + '/performance'
+    ).then((r) => r.json())
+    return userPerformance.data
+  }
+}

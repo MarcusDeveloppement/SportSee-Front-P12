@@ -1,5 +1,5 @@
 import styles from "./CardInfo.module.scss";
-import { USER_MAIN_DATA } from "../../Data/DataMocked.js";
+import ApiCall from "../../Data/ApiCall";
 import { useParams } from "react-router";
 import { useEffect, useState } from "react";
 import cal from "../../assets/img/icon/cal.svg";
@@ -10,15 +10,30 @@ import prot from "../../assets/img/icon/prot.svg";
 export default function CardInfo() {
   const [userData, setUserData] = useState(null);
   const { id } = useParams();
+  const api = new ApiCall();
 
   useEffect(() => {
-    const user = USER_MAIN_DATA.find((user) => user.id === parseInt(id));
-    if (user) {
-      setUserData(user);
-    }
-  }, [id]);
+    const fetchData = async () => {
+      try {
+        const user = await api.getUserData(id);
 
-  if (!userData) return null;
+        if (user) {
+          setUserData(user);
+        }
+      } catch (error) {
+        console.error("Erreur lors de la récupération des données :", error);
+      }
+    };
+
+    if (id) {
+      fetchData(); 
+    }
+  }, [id, api]);
+
+  if (!userData) {
+    return null;
+  }
+
 
   const { calorieCount, proteinCount, carbohydrateCount, lipidCount } =
     userData.keyData;

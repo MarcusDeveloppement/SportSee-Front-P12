@@ -6,8 +6,9 @@ import {
   YAxis,
   Tooltip,
   ResponsiveContainer,
+  Rectangle
 } from "recharts";
-import { USER_AVERAGE_SESSIONS } from "../../Data/DataMocked";
+import ApiCall from "../../Data/ApiCall";
 import { useParams } from "react-router";
 import { useState, useEffect } from "react";
 
@@ -16,24 +17,21 @@ const daysOfWeek = ["", "L", "M", "M", "J", "V", "S", "D"];
 export default function SessionDuration() {
   const [data, setData] = useState([]);
   const { id } = useParams();
+  const api = new ApiCall(); 
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const userAverage = USER_AVERAGE_SESSIONS.find(
-          (user) => user.userId === parseInt(id)
-        );
+        const userAverage = await api.getUserAverageSessions(id); 
 
         if (!userAverage || !userAverage.sessions) {
           return;
         }
 
-        const formatData = userAverage.sessions.map((sessionData) => {
-          return {
-            ...sessionData,
-            day: daysOfWeek[sessionData.day] || sessionData.day,
-          };
-        });
+        const formatData = userAverage.sessions.map((sessionData) => ({
+          ...sessionData,
+          day: daysOfWeek[sessionData.day] || sessionData.day,
+        }));
 
         setData(formatData);
       } catch (error) {
@@ -41,16 +39,24 @@ export default function SessionDuration() {
       }
     };
 
-    fetchData();
-  }, [id]);
+    if (id) {
+      fetchData(); 
+    }
+  }, [id, api]);
 
   if (data.length === 0) {
     return null;
   }
+  const CustomCursor = ({ points, width }) => {
+    const { x } = points[0]
+    return (
+      <Rectangle fill="hsla(0, 0%, 0%, 9.75%)" x={x} width={width} height={300} />
+    )
+  }
 
   return (
     <div className={styles.container}>
-      <ResponsiveContainer minWidth={300} minHeight={280}>
+      <ResponsiveContainer minWidth={268} minHeight={280}>
         <LineChart data={data}>
           <XAxis
             dataKey="day"
@@ -69,12 +75,18 @@ export default function SessionDuration() {
             hide={true}
             domain={[0, "dataMax + 50"]}
           />
-          <Tooltip content={<CustomTooltip />} />
+          <Tooltip cursor={<CustomCursor/>} content={<CustomTooltip />} />
           <Line
             type="monotone"
             dataKey="sessionLength"
             stroke="#fff"
             strokeWidth={2}
+            dot={false}
+            activeDot={{
+              stroke: "rgba(255,255,255, 0.6)",
+              strokeWidth: 10,
+              r: 5,
+            }}
           />
           <text
             x="50%"
@@ -114,3 +126,4 @@ function CustomTooltip({ active, payload }) {
 
   return null;
 }
+

@@ -1,4 +1,4 @@
-import { USER_MAIN_DATA } from "../../Data/DataMocked.js";
+import ApiCall from "../../Data/ApiCall";
 import { useParams } from "react-router";
 import { useState, useEffect } from "react";
 import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
@@ -7,23 +7,32 @@ import styles from "./Score.module.scss";
 export default function Score() {
   const [data, setData] = useState([]);
   const { id } = useParams();
+  const api = new ApiCall(); 
 
   useEffect(() => {
-    const userData = USER_MAIN_DATA.find((user) => user.id === parseInt(id));
+    const fetchData = async () => {
+      try {
+        const userData = await api.getUserData(id); 
+        if (userData) {
+          const todayScorePercentage = userData.todayScore * 100;
+          setData([
+            { name: "Today Score", value: todayScorePercentage },
+            { name: "Remaining", value: 100 - todayScorePercentage },
+          ]);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
 
-    if (userData) {
-      const todayScorePercentage = userData.todayScore * 100;
-      setData([
-        { name: "Today Score", value: todayScorePercentage },
-        { name: "Remaining", value: 100 - todayScorePercentage },
-      ]);
+    if (id) {
+      fetchData();
     }
-  }, [id]);
+  }, [id, api]);
 
   if (data.length === 0) return null;
 
   const COLORS = ["#ff0000", "#FBFBFB"];
-
   return (
     <>
       <ResponsiveContainer

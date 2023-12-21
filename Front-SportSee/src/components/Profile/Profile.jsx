@@ -1,31 +1,33 @@
 import { useEffect, useState } from "react";
-import { USER_MAIN_DATA } from "../../Data/DataMocked";
+import ApiCall from "../../Data/ApiCall";
 import styles from "./Profile.module.scss";
 
 export default function Profile({ id }) {
   const [data, setData] = useState([]);
   const [firstName, setFirstName] = useState("");
+  const api = new ApiCall(); 
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        setData(USER_MAIN_DATA);
+
+        const userData = await api.getUserData(id);
+        setData(userData); 
       } catch (error) {
         console.error(error);
       }
     };
 
-    fetchData();
-  }, []);
+    if (id) {
+      fetchData();
+    }
+  }, [id, api]); 
 
   useEffect(() => {
-    if (id && data.length > 0) {
-      const user = data.find((item) => item.id === parseInt(id));
-      if (user) {
-        setFirstName(user.userInfos.firstName);
-      }
+    if (data && data.userInfos) {
+      setFirstName(data.userInfos.firstName);
     }
-  }, [id, data]);
+  }, [data]);
 
   return (
     <div className={styles.nameContainer}>

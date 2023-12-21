@@ -1,5 +1,5 @@
 import styles from "./DailyActivity.module.scss";
-import { USER_ACTIVITY } from "../../Data/DataMocked.js";
+import ApiCall from "../../Data/ApiCall";
 import { useParams } from "react-router";
 import { useState, useEffect } from "react";
 import {
@@ -15,24 +15,30 @@ import {
 export default function DailyActivity() {
   const [data, setData] = useState([]);
   const { id } = useParams();
+  const api = new ApiCall(); 
 
   useEffect(() => {
-    const userActivity = USER_ACTIVITY.find(
-      (user) => user.userId === parseInt(id)
-    );
+    const fetchData = async () => {
+      try {
+        const userActivity = await api.getUserActivity(id); 
 
-    if (userActivity) {
-      setData(userActivity.sessions);
-    }
-  }, [id]);
+        if (userActivity && userActivity.sessions) {
+          setData(userActivity.sessions);
+        }
+      } catch (error) {
+        console.error("Erreur lors de la récupération des données :", error);
+      }
+    };
 
-  if (data.length === 0) return null;
+    fetchData();
+  }, [api, id]);
+
+  if (!data || data.length === 0) return null;
 
   const sessionsCountData = data.map((session) => ({
     day: session.day,
     calories: session.calories,
     kilogram: session.kilogram,
-    day: session.day,
   }));
 
   const formatDate = (dateStr) => {
@@ -55,7 +61,7 @@ export default function DailyActivity() {
             <span>
               <i className={`fa-solid fa-circle ${styles.reddot}`}></i>
             </span>
-            Calories brulées (kCal)
+            Calories brûlées (kCal)
           </p>
         </div>
       </div>
@@ -88,7 +94,6 @@ export default function DailyActivity() {
             stackId="stack"
             radius={[5, 5, 0, 0]}
           />
-
           <Bar
             yAxisId="left"
             dataKey="calories"
@@ -110,8 +115,8 @@ function CustomTooltip({ active, payload }) {
 
     return (
       <div className={styles.tooltip}>
-        <p>{data.kilogram}kg</p>
-        <p>{data.calories}Kcal</p>
+        <p>{data.kilogram} kg</p>
+        <p>{data.calories} kCal</p>
       </div>
     );
   }
