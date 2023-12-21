@@ -15,7 +15,7 @@ For this project you need to fork and clone the back-end repository in your proj
 - Yarn
 To used the good version of nodeJS for the back-end, you can download nvm, if you don't have it : https://github.com/coreybutler/nvm-windows/releases/tag/1.1.12 and take the .exe
 ```bash
-  git clone "the-backend-path"
+  git clone https://github.com/OpenClassrooms-Student-Center/P9-front-end-dashboard.git
   cd P9-front-end-dashboard
   nvm install 12.18
   nvm use 12.18
@@ -30,3 +30,5 @@ git clone https://github.com/MarcusDeveloppement/SportSee-Front-P12.git
 npm install
 npm run dev
 ```
+#### Mockup
+You can find the renderings of the figma model on : https://www.figma.com/file/BMomGVZqLZb811mDMShpLu/UI-design-Sportify-FR?type=design&node-id=0-1&mode=design
