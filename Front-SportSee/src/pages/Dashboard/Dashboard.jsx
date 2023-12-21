@@ -1,8 +1,9 @@
-import { useParams } from "react-router-dom";
+import { useEffect,useState } from "react";
+import { useParams,useNavigate } from "react-router-dom";
 import Header from "../../components/Header/Header";
 import LateralBar from "../../components/LateralBar/LateralBar";
 import Profile from "../../components/Profile/Profile.jsx";
-import { USER_MAIN_DATA } from "../../Data/DataMocked.js";
+import ApiCall from "../../Data/ApiCall.js";
 import styles from "./Dashboard.module.scss";
 import DailyActivity from "../../components/DailyActivity/DailyActivity.jsx";
 import SessionDuration from "../../components/SessionDuration/SessionDuration.jsx";
@@ -11,9 +12,31 @@ import Score from "../../components/Score/Score.jsx";
 import CardInfo from "../../components/CardInfo/CardInfo.jsx";
 
 export default function Dashboard() {
+  const navigate = useNavigate();
   const { id } = useParams();
-  const mainData = USER_MAIN_DATA;
-  const selectedData = mainData.find((item) => item.id === parseInt(id));
+  const api = new ApiCall();
+  const [userData, setUserData] = useState(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const userData = await api.getUserData(id);
+        if (!userData) {
+          navigate("/notfound");
+          return;
+        }
+        setUserData(userData);
+      } catch (error) {
+        console.error("Erreur lors de la récupération des données :", error);
+      }
+    };
+
+    fetchData();
+  }, [api, id, navigate]);
+
+  if (!userData) {
+    return null;
+  }
 
   return (
     <>
@@ -24,7 +47,7 @@ export default function Dashboard() {
           <div className={styles.graphique}>
             <div className={styles.displayAdapt}>
               <div className={styles.profil}>
-                <Profile id={selectedData.id} />
+                <Profile id={userData.id}  />
               </div>
               <DailyActivity />
               <div className={styles.graph}>
