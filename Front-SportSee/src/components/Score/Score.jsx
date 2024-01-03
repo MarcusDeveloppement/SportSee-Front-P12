@@ -6,19 +6,24 @@ import styles from "./Score.module.scss";
 
 export default function Score() {
   const [data, setData] = useState([]);
+  const [shouldRedraw, setShouldRedraw] = useState(false);
   const { id } = useParams();
-  const api = new ApiCall(); 
+  const api = new ApiCall();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const userData = await api.getUserData(id); 
+        const userData = await api.getUserData(id);
         if (userData) {
           const todayScorePercentage = userData.todayScore * 100;
+          setShouldRedraw(true);
           setData([
             { name: "Today Score", value: todayScorePercentage },
             { name: "Remaining", value: 100 - todayScorePercentage },
           ]);
+          setTimeout(() => {
+            setShouldRedraw(false);
+          }, 0);
         }
       } catch (error) {
         console.error(error);
@@ -28,7 +33,7 @@ export default function Score() {
     if (id) {
       fetchData();
     }
-  }, [id, api]);
+  }, [id]);
 
   if (data.length === 0) return null;
 
@@ -39,6 +44,7 @@ export default function Score() {
         className={styles.container}
         width="30%"
         height={280}
+        key={shouldRedraw ? "redrawing" : "notRedrawing"}
       >
         <PieChart>
           <text

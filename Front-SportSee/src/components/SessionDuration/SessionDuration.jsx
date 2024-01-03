@@ -6,7 +6,7 @@ import {
   YAxis,
   Tooltip,
   ResponsiveContainer,
-  Rectangle
+  Rectangle,
 } from "recharts";
 import ApiCall from "../../Data/ApiCall";
 import { useParams } from "react-router";
@@ -16,13 +16,14 @@ const daysOfWeek = ["", "L", "M", "M", "J", "V", "S", "D"];
 
 export default function SessionDuration() {
   const [data, setData] = useState([]);
+  const [shouldRedraw, setShouldRedraw] = useState(false);
   const { id } = useParams();
-  const api = new ApiCall(); 
+  const api = new ApiCall();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const userAverage = await api.getUserAverageSessions(id); 
+        const userAverage = await api.getUserAverageSessions(id);
 
         if (!userAverage || !userAverage.sessions) {
           return;
@@ -33,30 +34,39 @@ export default function SessionDuration() {
           day: daysOfWeek[sessionData.day] || sessionData.day,
         }));
 
+        setShouldRedraw(true);
         setData(formatData);
+        setTimeout(() => {
+          setShouldRedraw(false);
+        }, 0);
       } catch (error) {
         console.error("Erreur lors de la récupération des données :", error);
       }
     };
 
     if (id) {
-      fetchData(); 
+      fetchData();
     }
-  }, [id, api]);
+  }, [id]);
 
   if (data.length === 0) {
     return null;
   }
+
   const CustomCursor = ({ points, width }) => {
-    const { x } = points[0]
+    const { x } = points[0];
     return (
-      <Rectangle fill="hsla(0, 0%, 0%, 9.75%)" x={x} width={width} height={300} />
-    )
-  }
+      <Rectangle fill="hsla(0, 0%, 0%, 22%)" x={x} width={width} height={300} />
+    );
+  };
 
   return (
     <div className={styles.container}>
-      <ResponsiveContainer minWidth={268} minHeight={280}>
+      <ResponsiveContainer
+        minWidth={268}
+        minHeight={280}
+        key={shouldRedraw ? "redrawing" : "notRedrawing"}
+      >
         <LineChart data={data}>
           <XAxis
             dataKey="day"
@@ -75,7 +85,7 @@ export default function SessionDuration() {
             hide={true}
             domain={[0, "dataMax + 50"]}
           />
-          <Tooltip cursor={<CustomCursor/>} content={<CustomTooltip />} />
+          <Tooltip cursor={<CustomCursor />} content={<CustomTooltip />} />
           <Line
             type="monotone"
             dataKey="sessionLength"
@@ -126,4 +136,3 @@ function CustomTooltip({ active, payload }) {
 
   return null;
 }
-

@@ -14,24 +14,51 @@ import {
 
 export default function DailyActivity() {
   const [data, setData] = useState([]);
+  const [error, setError] = useState(null);
   const { id } = useParams();
-  const api = new ApiCall(); 
+  const api = new ApiCall();
+  const [shouldRedraw, setShouldRedraw] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const userActivity = await api.getUserActivity(id); 
+        const userActivity = await api.getUserActivity(id);
 
         if (userActivity && userActivity.sessions) {
-          setData(userActivity.sessions);
+          const sessionsCountData = userActivity.sessions.map((session) => ({
+            day: session.day,
+            calories: session.calories,
+            kilogram: session.kilogram,
+          }));
+          setData(sessionsCountData);
+          setShouldRedraw(true);
         }
       } catch (error) {
+        setError(error);
         console.error("Erreur lors de la récupération des données :", error);
       }
     };
 
     fetchData();
-  }, [api, id]);
+  }, [id]);
+
+  useEffect(() => {
+    if (data.length > 0) {
+      setShouldRedraw(false);
+    }
+  }, [data]);
+
+  if (error) {
+    return (
+      <div className={styles.errorPopup}>
+        <div className={styles.errorContent}>
+          <h2>Erreur de chargement</h2>
+          <p>Une erreur s'est produite lors du chargement des données.</p>
+          <p>{error.message}</p>
+        </div>
+      </div>
+    );
+  }
 
   if (!data || data.length === 0) return null;
 
@@ -66,7 +93,12 @@ export default function DailyActivity() {
         </div>
       </div>
       <ResponsiveContainer height={200}>
-        <BarChart data={sessionsCountData} barGap={8} barCategoryGap={1}>
+        <BarChart
+          data={sessionsCountData}
+          barGap={8}
+          barCategoryGap={1}
+          key={shouldRedraw ? "forceRedraw" : "default"}
+        >
           <CartesianGrid vertical={false} strokeDasharray="1 1" />
           <XAxis
             dataKey="day"

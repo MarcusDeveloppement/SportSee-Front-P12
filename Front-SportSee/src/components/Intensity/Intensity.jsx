@@ -22,19 +22,24 @@ const frenchTranslation = {
 
 export default function Intensity() {
   const [data, setData] = useState([]);
+  const [shouldRedraw, setShouldRedraw] = useState(false);
   const { id } = useParams();
-  const api = new ApiCall(); 
+  const api = new ApiCall();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const userPerformance = await api.getUserPerformance(id); 
-        if (userPerformance) {
-          const formattedData = userPerformance.data.map((entry, index) => ({
-            subject: frenchTranslation[index + 1], 
+        const userPerformance = await api.getUserPerformance(id);
+        if (userPerformance && userPerformance.data) {
+          const formattedData = userPerformance.data.map((entry) => ({
+            subject: frenchTranslation[entry.kind],
             A: entry.value,
           }));
+          setShouldRedraw(true);
           setData(formattedData);
+          setTimeout(() => {
+            setShouldRedraw(false);
+          }, 0);
         }
       } catch (error) {
         console.error(error);
@@ -42,15 +47,21 @@ export default function Intensity() {
     };
 
     if (id) {
-      fetchData(); 
+      fetchData();
     }
-  }, [id, api]);
+  }, [id]);
 
   if (data.length === 0) {
     return null;
   }
+
   return (
-    <ResponsiveContainer width="35%" height={281} className={styles.container}>
+    <ResponsiveContainer
+      width="35%"
+      height={281}
+      className={styles.container}
+      key={shouldRedraw ? "redrawing" : "notRedrawing"}
+    >
       <RadarChart cx="50%" cy="50%" outerRadius="80%" data={data}>
         <PolarGrid />
         <PolarAngleAxis

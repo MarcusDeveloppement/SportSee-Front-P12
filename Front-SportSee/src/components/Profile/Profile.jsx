@@ -3,16 +3,15 @@ import ApiCall from "../../Data/ApiCall";
 import styles from "./Profile.module.scss";
 
 export default function Profile({ id }) {
-  const [data, setData] = useState([]);
+  const [data, setData] = useState(null);
   const [firstName, setFirstName] = useState("");
-  const api = new ApiCall(); 
+  const api = new ApiCall();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-
         const userData = await api.getUserData(id);
-        setData(userData); 
+        setData(userData);
       } catch (error) {
         console.error(error);
       }
@@ -21,7 +20,7 @@ export default function Profile({ id }) {
     if (id) {
       fetchData();
     }
-  }, [id, api]); 
+  }, [id, api]);
 
   useEffect(() => {
     if (data && data.userInfos) {
