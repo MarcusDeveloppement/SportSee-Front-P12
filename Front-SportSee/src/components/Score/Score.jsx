@@ -15,11 +15,15 @@ export default function Score() {
       try {
         const userData = await api.getUserData(id);
         if (userData) {
-          const todayScorePercentage = userData.todayScore * 100;
+          const score =
+            userData.todayScore !== undefined
+              ? userData.todayScore
+              : userData.score;
+          const scorePercentage = score * 100;
           setShouldRedraw(true);
           setData([
-            { name: "Today Score", value: todayScorePercentage },
-            { name: "Remaining", value: 100 - todayScorePercentage },
+            { name: "Today Score", value: scorePercentage },
+            { name: "Remaining", value: 100 - scorePercentage },
           ]);
           setTimeout(() => {
             setShouldRedraw(false);
