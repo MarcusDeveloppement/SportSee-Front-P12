@@ -55,7 +55,7 @@ export default function Dashboard() {
             Une erreur s'est produite lors du chargement des données à partir du
             serveur.
           </h3>
-          <p>({error.message})</p>
+          <p>Veuillez réessayer ultérieurement</p>
           <a href="http://localhost:5173/">Retour</a>
         </div>
       </div>

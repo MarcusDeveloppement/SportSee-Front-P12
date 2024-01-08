@@ -14,7 +14,6 @@ import {
 
 export default function DailyActivity() {
   const [data, setData] = useState([]);
-  const [error, setError] = useState(null);
   const { id } = useParams();
   const api = new ApiCall();
   const [shouldRedraw, setShouldRedraw] = useState(false);
@@ -34,7 +33,6 @@ export default function DailyActivity() {
           setShouldRedraw(true);
         }
       } catch (error) {
-        setError(error);
         console.error("Erreur lors de la récupération des données :", error);
       }
     };
@@ -47,18 +45,6 @@ export default function DailyActivity() {
       setShouldRedraw(false);
     }
   }, [data]);
-
-  if (error) {
-    return (
-      <div className={styles.errorPopup}>
-        <div className={styles.errorContent}>
-          <h2>Erreur de chargement</h2>
-          <p>Une erreur s'est produite lors du chargement des données.</p>
-          <p>{error.message}</p>
-        </div>
-      </div>
-    );
-  }
 
   if (!data || data.length === 0) return null;
 
