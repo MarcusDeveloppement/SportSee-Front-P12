@@ -1,5 +1,6 @@
 import styles from "./DailyActivity.module.scss";
 import ApiCall from "../../Data/ApiCall";
+import { USER_ACTIVITY } from "../../Data/DataMocked.js";
 import { useParams } from "react-router";
 import { useState, useEffect } from "react";
 import {
@@ -17,11 +18,24 @@ export default function DailyActivity() {
   const { id } = useParams();
   const api = new ApiCall();
   const [shouldRedraw, setShouldRedraw] = useState(false);
+  const [useMockData, setUseMockData] = useState(false);
+
+  useEffect(() => {
+    setUseMockData(import.meta.env.VITE_USE_MOCK_DATA === "true");
+  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const userActivity = await api.getUserActivity(id);
+        let userActivity;
+        if (useMockData) {
+          const mockData = USER_ACTIVITY.find(
+            (activity) => activity.userId === parseInt(id)
+          );
+          userActivity = mockData;
+        } else {
+          userActivity = await api.getUserActivity(id);
+        }
 
         if (userActivity && userActivity.sessions) {
           const sessionsCountData = userActivity.sessions.map((session) => ({
@@ -37,8 +51,10 @@ export default function DailyActivity() {
       }
     };
 
-    fetchData();
-  }, [id]);
+    if (id) {
+      fetchData();
+    }
+  }, [id, useMockData]);
 
   useEffect(() => {
     if (data.length > 0) {

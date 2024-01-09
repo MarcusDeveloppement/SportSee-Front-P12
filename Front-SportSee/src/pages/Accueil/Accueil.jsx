@@ -7,12 +7,12 @@ export default function Accueil() {
     <div>
       <h1 className={styles.title}>Choisissez un profil</h1>
       <div className={styles.linkContainer}>
-          <NavLink to={`/user/12`} key={12}>
-            <button>Karl</button>
-          </NavLink>
-          <NavLink to={`/user/18`} key={18}>
-            <button>Cecilia</button>
-          </NavLink>
+        <NavLink to={`/user/12`} key={12}>
+          <button>Karl</button>
+        </NavLink>
+        <NavLink to={`/user/18`} key={18}>
+          <button>Cecilia</button>
+        </NavLink>
       </div>
     </div>
   );

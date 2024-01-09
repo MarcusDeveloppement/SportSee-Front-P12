@@ -3,41 +3,56 @@ import { useParams } from "react-router";
 import { useState, useEffect } from "react";
 import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
 import styles from "./Score.module.scss";
+import { USER_MAIN_DATA } from "../../Data/DataMocked.js";
 
 export default function Score() {
   const [data, setData] = useState([]);
   const [shouldRedraw, setShouldRedraw] = useState(false);
   const { id } = useParams();
   const api = new ApiCall();
+  const [useMockData, setUseMockData] = useState(false);
+
+  useEffect(() => {
+    setUseMockData(import.meta.env.VITE_USE_MOCK_DATA === "true");
+  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const userData = await api.getUserData(id);
+        let userData;
+        if (useMockData) {
+          // Recherche dans les données simulées
+          userData = USER_MAIN_DATA.find((user) => user.id === parseInt(id));
+        } else {
+          // Appel API
+          userData = await api.getUserData(id);
+        }
+
         if (userData) {
           const score =
             userData.todayScore !== undefined
               ? userData.todayScore
               : userData.score;
           const scorePercentage = score * 100;
-          setShouldRedraw(true);
           setData([
             { name: "Today Score", value: scorePercentage },
             { name: "Remaining", value: 100 - scorePercentage },
           ]);
-          setTimeout(() => {
-            setShouldRedraw(false);
-          }, 0);
         }
       } catch (error) {
-        console.error(error);
+        console.error("Erreur lors de la récupération des données :", error);
+      } finally {
+        setShouldRedraw(true);
+        setTimeout(() => {
+          setShouldRedraw(false);
+        }, 0);
       }
     };
 
     if (id) {
       fetchData();
     }
-  }, [id]);
+  }, [id, useMockData]);
 
   if (data.length === 0) return null;
 

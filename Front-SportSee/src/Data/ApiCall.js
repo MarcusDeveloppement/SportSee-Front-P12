@@ -3,10 +3,6 @@ export default class ApiCall {
     const userData = await fetch(
       "http://localhost:3000/user/" + userId + "/"
     ).then((r) => r.json());
-
-    if (typeof userData === "string") {
-      return;
-    }
     return userData.data;
   }
 

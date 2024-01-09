@@ -6,16 +6,28 @@ import cal from "../../assets/img/icon/cal.svg";
 import carbs from "../../assets/img/icon/carbs.svg";
 import fat from "../../assets/img/icon/fat.svg";
 import prot from "../../assets/img/icon/prot.svg";
+import { USER_MAIN_DATA } from "../../Data/DataMocked.js";
 
 export default function CardInfo() {
   const [userData, setUserData] = useState(null);
   const { id } = useParams();
   const api = new ApiCall();
+  const [useMockData, setUseMockData] = useState(false);
+
+  useEffect(() => {
+    setUseMockData(import.meta.env.VITE_USE_MOCK_DATA === "true");
+  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const user = await api.getUserData(id);
+        let user;
+        if (useMockData) {
+          const mainData = USER_MAIN_DATA;
+          user = mainData.find((item) => item.id === parseInt(id));
+        } else {
+          user = await api.getUserData(id);
+        }
 
         if (user) {
           setUserData(user);
@@ -26,14 +38,13 @@ export default function CardInfo() {
     };
 
     if (id) {
-      fetchData(); 
+      fetchData();
     }
-  }, [id, api]);
+  }, [id, useMockData]);
 
   if (!userData) {
     return null;
   }
-
 
   const { calorieCount, proteinCount, carbohydrateCount, lipidCount } =
     userData.keyData;

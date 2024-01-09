@@ -11,6 +11,7 @@ import {
 import ApiCall from "../../Data/ApiCall";
 import { useParams } from "react-router";
 import { useState, useEffect } from "react";
+import { USER_AVERAGE_SESSIONS } from "../../Data/DataMocked";
 
 const daysOfWeek = ["", "L", "M", "M", "J", "V", "S", "D"];
 
@@ -19,35 +20,49 @@ export default function SessionDuration() {
   const [shouldRedraw, setShouldRedraw] = useState(false);
   const { id } = useParams();
   const api = new ApiCall();
+  const [useMockData, setUseMockData] = useState(false);
+
+  useEffect(() => {
+    setUseMockData(import.meta.env.VITE_USE_MOCK_DATA === "true");
+  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const userAverage = await api.getUserAverageSessions(id);
-
-        if (!userAverage || !userAverage.sessions) {
-          return;
+        let userAverage;
+        if (useMockData) {
+          // Recherche dans les données simulées
+          const mockData = USER_AVERAGE_SESSIONS.find(
+            (session) => session.userId === parseInt(id)
+          );
+          userAverage = mockData;
+        } else {
+          // Appel API
+          userAverage = await api.getUserAverageSessions(id);
         }
 
-        const formatData = userAverage.sessions.map((sessionData) => ({
-          ...sessionData,
-          day: daysOfWeek[sessionData.day] || sessionData.day,
-        }));
+        if (userAverage && userAverage.sessions) {
+          const formatData = userAverage.sessions.map((sessionData) => ({
+            ...sessionData,
+            day: daysOfWeek[sessionData.day] || sessionData.day,
+          }));
 
+          setData(formatData);
+        }
+      } catch (error) {
+        console.error("Erreur lors de la récupération des données :", error);
+      } finally {
         setShouldRedraw(true);
-        setData(formatData);
         setTimeout(() => {
           setShouldRedraw(false);
         }, 0);
-      } catch (error) {
-        console.error("Erreur lors de la récupération des données :", error);
       }
     };
 
     if (id) {
       fetchData();
     }
-  }, [id]);
+  }, [id, useMockData]);
 
   if (data.length === 0) {
     return null;
