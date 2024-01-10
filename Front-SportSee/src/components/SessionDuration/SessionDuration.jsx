@@ -31,14 +31,13 @@ export default function SessionDuration() {
       try {
         let userAverage;
         if (useMockData) {
-          // Recherche dans les données simulées
           const mockData = USER_AVERAGE_SESSIONS.find(
             (session) => session.userId === parseInt(id)
           );
           userAverage = mockData;
         } else {
-          // Appel API
           userAverage = await api.getUserAverageSessions(id);
+          setShouldRedraw(true);
         }
 
         if (userAverage && userAverage.sessions) {
@@ -52,10 +51,11 @@ export default function SessionDuration() {
       } catch (error) {
         console.error("Erreur lors de la récupération des données :", error);
       } finally {
-        setShouldRedraw(true);
-        setTimeout(() => {
-          setShouldRedraw(false);
-        }, 0);
+        if (!useMockData) {
+          setTimeout(() => {
+            setShouldRedraw(false);
+          }, 0);
+        }
       }
     };
 

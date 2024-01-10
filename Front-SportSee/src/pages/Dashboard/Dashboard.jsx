@@ -34,11 +34,9 @@ export default function Dashboard() {
       try {
         let fetchedData;
         if (useMockData) {
-          // Utilisation des données simulées
           const mainData = USER_MAIN_DATA;
           fetchedData = mainData.find((item) => item.id === parseInt(id));
         } else {
-          // Tentative de récupération des données via l'API
           fetchedData = await api.getUserData(id);
         }
 
@@ -49,9 +47,8 @@ export default function Dashboard() {
       } catch (error) {
         console.error("Erreur lors de la récupération des données :", error);
         setError(error);
-        // Pas besoin de naviguer ici, on peut afficher l'erreur dans le composant actuel.
       } finally {
-        setLoading(false); // Arrêter le chargement que l'appel soit réussi ou non
+        setLoading(false);
       }
     };
 
@@ -85,7 +82,7 @@ export default function Dashboard() {
                 </button>
                 <h2>Erreur de chargement des données du serveur</h2>
                 <h3>Veuillez réessayer ultérieurement.</h3>
-                <p>les données affichées sont les données mocké</p>
+                <p>les données affichées sont les données simulées</p>
                 <a href="http://localhost:5173/">Retour</a>
               </div>
             </div>

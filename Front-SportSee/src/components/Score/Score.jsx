@@ -21,11 +21,11 @@ export default function Score() {
       try {
         let userData;
         if (useMockData) {
-          // Recherche dans les données simulées
           userData = USER_MAIN_DATA.find((user) => user.id === parseInt(id));
         } else {
-          // Appel API
           userData = await api.getUserData(id);
+          // Déclencher le redessinage uniquement si les données proviennent de l'API
+          setShouldRedraw(true);
         }
 
         if (userData) {
@@ -42,10 +42,12 @@ export default function Score() {
       } catch (error) {
         console.error("Erreur lors de la récupération des données :", error);
       } finally {
-        setShouldRedraw(true);
-        setTimeout(() => {
-          setShouldRedraw(false);
-        }, 0);
+        if (!useMockData) {
+          // Réinitialiser shouldRedraw après un court délai
+          setTimeout(() => {
+            setShouldRedraw(false);
+          }, 0);
+        }
       }
     };
 
